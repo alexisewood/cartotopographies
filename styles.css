@@ -112,6 +112,15 @@ body{
   padding-right: 18px;
 }
 
+#map-container svg{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: calc(100vh - 95px);
+  min-height: 640px;
+  display: block;
+}
+
 /* --- Faint cartographic gridlines overlay --- */
 #map-container::before{
   content: "";
@@ -180,19 +189,18 @@ body.panel-open #map-container::before{
 
 /* Contours */
 .contour{
-  stroke: var(--line);
+  stroke: var(--line) !important;
   stroke-width: 1.2px;
-  fill: none;
+  fill: none !important;
   cursor: pointer;
-
-  /* keeps stroke thickness consistent when SVG scales */
   vector-effect: non-scaling-stroke;
+  transition: stroke 160ms ease, stroke-width 160ms ease, opacity 160ms ease, filter 160ms ease;
+}
 
-  transition:
-    stroke 160ms ease,
-    stroke-width 160ms ease,
-    opacity 160ms ease,
-    filter 160ms ease;
+.contour:hover{
+  stroke: var(--accent) !important;
+  stroke-width: 2.2px;
+  opacity: .95;
 }
 
 .contour:hover{
