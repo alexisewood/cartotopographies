@@ -11,12 +11,12 @@ const panelBody = document.getElementById("panel-body");
 const panelClose = document.getElementById("panel-close");
 const panelOverlay = document.getElementById("panel-overlay");
 
-// Footer controls (optional, but supported by the CSS + markup I gave you)
+// Footer controls (optional)
 const prevBtn = document.getElementById("prev-fragment");
 const nextBtn = document.getElementById("next-fragment");
 const layerLink = document.getElementById("layer-link");
 
-// Layer names + essay links
+// Layer names + essay links (if you use them)
 const LAYERS = {
   0: { name: "Orientation", href: "layer-0.html" },
   1: { name: "Instrument", href: "layer-1.html" },
@@ -24,111 +24,73 @@ const LAYERS = {
   3: { name: "Ruin / Afterlives", href: "layer-3.html" },
 };
 
-// Your content lives here.
-// Add entries gradually; anything missing falls back to a friendly placeholder.
-//
-// layer: 0–3
-// order: number (used for Prev/Next within layer)
+// Content store (add entries gradually)
+// IMPORTANT: keys must match your SVG path ids, e.g., "contour-1"
 const CONTOUR_CONTENT = {
   "contour-1": {
     title: "Orientation · First ring",
-    meta: "Layer 0 · how to read",
+    meta: "How to read · click rings to open fragments",
     layer: 0,
     order: 1,
     body: `
       <section class="entry">
         <div class="entry-block">
-          <div class="entry-label">Reading instructions</div>
+          <div class="entry-label">How to read</div>
           <p>
-            Click a ring. The panel is a reader. Each fragment is a relay:
-            measurement → monument → weather → archive.
+            Click a ring. The right-hand panel is a reader. Each fragment is a small relay between
+            measurement, mountain, and memory.
           </p>
         </div>
+
         <div class="entry-block">
           <div class="entry-label">What the rings do</div>
           <p>
-            These lines aren’t just elevation. They’re a collapse of time and space—
-            a way to feel how distance becomes political, material, and uneven.
+            These lines aren’t only elevation. They’re a way of watching enchantment thin out—
+            where the world becomes legible as geometry, and something in it goes quiet.
           </p>
         </div>
+
         <div class="entry-actions">
-          <a class="panel-link" href="essay.html">Open the layered essay →</a>
+          <a class="panel-link" href="essay.html">Read the essay →</a>
         </div>
       </section>
     `,
   },
 
-  // Example: Mt. Shasta signal fragment (edit id to match a real ring you want)
+  // Example Mt. Shasta signal fragment (edit the id to a real contour id you have)
   "contour-42": {
-    title: "Elevation band · Relay Node",
-    meta: "Layer 1 · Instrument · 1875 / 1954 / present drift",
+    title: "Relay Node · Mount Shasta Signal",
+    meta: "Layer 1 · Instrument · 1875 / 1954 / afterlife",
     layer: 1,
     order: 1,
     body: `
       <section class="entry">
-
         <div class="entry-block">
-          <div class="entry-label">Coordinate</div>
+          <div class="entry-label">Scene</div>
           <p>
-            In 1875, at immense labor and expense, a 3,500-pound reflective cone and base
-            were hauled to the summit of Mount Shasta’s north peak and installed as a
-            transcontinental geodetic relay point—built to collapse 192 miles into measurable relation.
+            In 1875, a 3,500-pound reflective cone and base were hauled to the summit of Mount Shasta’s north peak
+            and installed as a transcontinental geodetic relay point—built to collapse 192 miles into measurable relation.
           </p>
         </div>
 
         <div class="entry-block">
           <div class="entry-label">Operation</div>
           <p>
-            The signal translated light into line, summit into coordinate, geology into geometry.
-            For a moment, elevation functioned as relay.
+            Light flashed from summit to summit. Angles became lines. The mountain became an instrument platform:
+            granite repurposed as infrastructure.
           </p>
         </div>
 
         <div class="entry-block">
-          <div class="entry-label">Failure Mode</div>
+          <div class="entry-label">Afterlife</div>
           <p>
-            Snow accumulated. Ice encased the base. The relay became weather, rumor, artifact.
-            What had been a monument to measurement slipped into obscurity—visible only when thaw revealed it.
-          </p>
-        </div>
-
-        <div class="entry-block">
-          <div class="entry-label">Temporal Distortion</div>
-          <p>
-            The contour is not elevation alone. It is a fold in time: ambition, neglect, and recovery
-            layered onto the same coordinate. Measurement sought permanence. Instead, it produced afterlife.
+            Snow returned. Ice encased it. The relay became weather, rumor, artifact—visible only when thaw revealed it,
+            then finally moved into the Siskiyou County Museum.
           </p>
         </div>
 
         <div class="entry-actions">
-          <a class="panel-link" href="layer-1.html">Read Layer 1 essay →</a>
-        </div>
-
-      </section>
-    `,
-  },
-
-  "contour-57": {
-    title: "Compression band · Survey feeling",
-    meta: "Layer 1 · Instrument · felt distance",
-    layer: 1,
-    order: 2,
-    body: `
-      <section class="entry">
-        <div class="entry-block">
-          <div class="entry-label">Instrument reading</div>
-          <p>
-            Precision does not erase affect. It reorganizes it—into thresholds, margins, and zones of attention.
-          </p>
-        </div>
-        <div class="entry-block">
-          <div class="entry-label">Question</div>
-          <p>
-            When the map claims neutrality, whose labor and risk does it hide?
-          </p>
-        </div>
-        <div class="entry-actions">
-          <a class="panel-link" href="layer-1.html">Read Layer 1 essay →</a>
+          <a class="panel-link" href="essay.html">Read the essay →</a>
         </div>
       </section>
     `,
@@ -152,12 +114,17 @@ function openPanel() {
   panel.classList.add("open");
   panelOverlay.classList.add("open");
   panel.setAttribute("aria-hidden", "false");
+
+  // This triggers grid fade + any other "panel open" styling
+  document.body.classList.add("panel-open");
 }
 
 function closePanel() {
   panel.classList.remove("open");
   panelOverlay.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
+
+  document.body.classList.remove("panel-open");
 }
 
 function getFallbackEntry(id) {
@@ -171,21 +138,19 @@ function getFallbackEntry(id) {
         <div class="entry-block">
           <div class="entry-label">Unwritten fragment</div>
           <p>
-            This ring doesn’t have an entry yet. Add it in <code>CONTOUR_CONTENT</code> inside <code>v2/script.js</code>.
+            This ring doesn’t have an entry yet. Add it inside <code>CONTOUR_CONTENT</code> in <code>v2/script.js</code>.
           </p>
         </div>
+
         <div class="entry-block">
           <div class="entry-label">Template</div>
           <pre><code>"${id}": {
   title: "...",
-  meta: "Layer 1 · Instrument · ...",
+  meta: "...",
   layer: 1,
   order: 3,
   body: \`&lt;section class="entry"&gt;...&lt;/section&gt;\`
 }</code></pre>
-        </div>
-        <div class="entry-actions">
-          <a class="panel-link" href="essay.html">Open the layered essay →</a>
         </div>
       </section>
     `,
@@ -197,11 +162,10 @@ function getEntry(id) {
 }
 
 function getIdsInLayer(layerNum) {
-  const ids = Object.entries(CONTOUR_CONTENT)
+  return Object.entries(CONTOUR_CONTENT)
     .filter(([_, v]) => v.layer === layerNum)
     .sort((a, b) => (a[1].order ?? 9999) - (b[1].order ?? 9999))
     .map(([k]) => k);
-  return ids;
 }
 
 let currentId = null;
@@ -212,12 +176,11 @@ function updateFooterNav(entry) {
   const layerNum = entry.layer ?? 0;
   const ids = getIdsInLayer(layerNum);
 
-  // If there are no authored entries in this layer, disable navigation
-  if (ids.length === 0 || !currentId) {
+  if (!currentId || ids.length === 0) {
     prevBtn.disabled = true;
     nextBtn.disabled = true;
     layerLink.href = "essay.html";
-    layerLink.textContent = "Read Layer";
+    layerLink.textContent = "Read Essay";
     return;
   }
 
@@ -225,7 +188,7 @@ function updateFooterNav(entry) {
   prevBtn.disabled = idx <= 0;
   nextBtn.disabled = idx < 0 || idx >= ids.length - 1;
 
-  const layerInfo = LAYERS[layerNum] ?? { name: "Layer", href: "essay.html" };
+  const layerInfo = LAYERS[layerNum] ?? { name: "Essay", href: "essay.html" };
   layerLink.href = layerInfo.href;
   layerLink.textContent = `Read ${layerInfo.name}`;
 }
@@ -289,4 +252,3 @@ contours.forEach((path) => {
     openPanelForContour(path.id);
   });
 });
-
