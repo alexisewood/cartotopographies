@@ -1,1 +1,286 @@
+/* v2/styles.css */
+
+:root{
+  /* Mountain/forest base */
+  --bg0: #060d09;
+  --bg1: #09150f;
+
+  /* Mist + ink */
+  --ink: #e9efe9;
+  --muted: rgba(233,239,233,.72);
+
+  /* Technical sublime accent (warm instrument glow) */
+  --accent: #f3d37a;
+
+  /* Lines + borders */
+  --line: rgba(233,239,233,.55);
+  --border: rgba(233,239,233,.16);
+
+  /* Panel */
+  --panelBg: rgba(6,12,9,.94);
+}
+
+*{ box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body{
+  margin: 0;
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  background:
+    radial-gradient(1200px 700px at 20% 15%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(900px 600px at 75% 30%, rgba(243,211,122,.06), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+
+/* ---------------------------
+   Top bar
+--------------------------- */
+.topbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+
+  background: rgba(6,12,9,.62);
+  backdrop-filter: blur(10px);
+}
+
+.site-title{
+  font-family: Cinzel, serif;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  font-size: 16px;
+  color: var(--ink);
+  opacity: .95;
+}
+
+.topbar-right{
+  display: flex;
+  gap: 10px;
+}
+
+.topbar-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 12px;
+
+  background: rgba(255,255,255,.04);
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.topbar-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.07);
+  border-color: rgba(243,211,122,.22);
+}
+
+/* ---------------------------
+   Map container
+--------------------------- */
+#map-container{
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 64px; /* space for fixed topbar */
+}
+
+svg{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Contours */
+.contour{
+  stroke: var(--line);
+  stroke-width: 1.2px;
+  fill: none;
+  cursor: pointer;
+
+  transition:
+    stroke 160ms ease,
+    stroke-width 160ms ease,
+    opacity 160ms ease,
+    filter 160ms ease;
+}
+
+.contour:hover{
+  stroke: var(--accent);
+  stroke-width: 2.4px;
+}
+
+/* Selected contour glow */
+.active-contour{
+  stroke: var(--accent) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 6px rgba(243,211,122,.55));
+}
+
+/* ---------------------------
+   Tooltip
+--------------------------- */
+#tooltip{
+  position: absolute;
+  background: rgba(8,16,12,.92);
+  color: var(--ink);
+  padding: 8px 10px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(233,239,233,.14);
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  font-size: 12px;
+  z-index: 25;
+
+  max-width: 280px;
+}
+
+/* ---------------------------
+   Overlay + Panel
+--------------------------- */
+.panel-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.38);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 40;
+}
+
+.panel-overlay.open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.info-panel{
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  height: 100vh;
+  width: min(460px, 92vw);
+
+  transform: translateX(102%);
+  transition: transform 260ms cubic-bezier(.2,.8,.2,1);
+
+  z-index: 50;
+
+  background: var(--panelBg);
+  border-left: 1px solid rgba(243,211,122,.20);
+
+  box-shadow: -30px 0 70px rgba(0,0,0,.45);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.info-panel.open{
+  transform: translateX(0);
+}
+
+.panel-head{
+  padding: 18px 18px 12px;
+  border-bottom: 1px solid rgba(243,211,122,.25);
+
+  background: linear-gradient(
+    90deg,
+    rgba(243,211,122,.06),
+    rgba(0,0,0,.46)
+  );
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.panel-head h2{
+  margin: 0;
+  font-family: Cinzel, serif;
+  font-size: 16px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+}
+
+.panel-meta{
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: .12em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: rgba(243,211,122,.78);
+}
+
+.panel-close{
+  appearance: none;
+  border: 1px solid rgba(243,211,122,.30);
+  background: rgba(243,211,122,.05);
+  color: rgba(243,211,122,.92);
+
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.panel-close:hover{
+  transform: translateY(-1px);
+  background: rgba(243,211,122,.12);
+  border-color: rgba(243,211,122,.45);
+}
+
+.panel-body{
+  padding: 14px 16px 18px;
+  overflow: auto;
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.panel-body p{ color: rgba(233,239,233,.84); }
+.panel-body a{ color: var(--accent); text-decoration: none; }
+.panel-body a:hover{ text-decoration: underline; }
+
+.panel-body pre{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(233,239,233,.14);
+  padding: 10px;
+  border-radius: 10px;
+  overflow: auto;
+}
+
+.panel-body code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+}
+
+/* Panel footer (Prev/Next/Read Layer) */
+.panel-foot{
+  padding: 12px 14px;
+  border-top: 1px solid rgba(243,211
 
