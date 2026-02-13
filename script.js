@@ -1,7 +1,7 @@
 // v2/script.js
 
 const tooltip = document.getElementById("tooltip");
-const contours = document.querySelectorAll(".contour");
+const contours = document.querySelectorAll("#contours .contour");
 
 // Panel elements
 const panel = document.getElementById("info-panel");
